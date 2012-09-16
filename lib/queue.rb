@@ -12,7 +12,13 @@ class Queue
 
   def get_task(time)
     return nil if @q.empty?
-    pop or @q.delete_at(@q.index { |item| item.finish_time == time })
+    item = pop
+    unless item
+      idx = @q.index { |item| item.finish_time == time }
+      return nil unless idx
+      item = @q.delete_at(idx)
+    end
+    item
   end
 
   def pop

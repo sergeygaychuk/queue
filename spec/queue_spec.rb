@@ -93,6 +93,16 @@ describe Queue do
       q.size.should eq(2)
     end
 
+    it "should return nil if task with appropriate time isn't found" do
+      q = Queue.new
+      t1 = Task.new(:finish_time => Time.now + 10000, :description => "Third")
+      t2 = Task.new(:finish_time => Time.now + 2592000, :description => "Fourth")
+      q.push(t1).push(t2)
+      q.size.should eq(2)
+      q.get_task(Time.now).should be_nil
+      q.size.should eq(2)
+    end
+
     it "should return nil if queue is empty" do
       q = Queue.new
       q.size.should eq(0)
