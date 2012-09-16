@@ -59,5 +59,20 @@ describe Queue do
       q.pop.should be_nil
       q.size.should eq(2)
     end
+
+    it "should return most delayed element after pop" do
+      q = Queue.new
+      t1 = Task.new(:finish_time => Time.now + 1000, :description => "Third")
+      t2 = Task.new(:finish_time => Time.now + 2592000, :description => "Fourth")
+      t3 = Task.new(:finish_time => Time.now - 1592000, :description => "Second")
+      t4 = Task.new(:finish_time => Time.now - 2592000, :description => "First")
+      q.push(t1).push(t2).push(t3).push(t4)
+      q.size.should eq(4)
+      q.pop.should eq(t4)
+      q.size.should eq(3)
+      q.pop.should eq(t3)
+      q.size.should eq(2)
+      q.pop.should be_nil
+    end
   end
 end
