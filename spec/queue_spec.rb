@@ -124,4 +124,41 @@ describe Queue do
       q.size.should eq(2)
     end
   end
+
+  it "should be thread safe" do
+    q = Queue.new
+    m = Mutex.new
+    val = 0
+
+    writers = 10.times.collect do
+      Thread.new do
+        rand(100).times do |i|
+          q.push(Task.new(:finish_time => Time.now + ((i % 2) == 0 ? rand(100) : -rand(100)) * i * 1000,
+                           :description => "First"))
+
+          m.synchronize do
+            val += 1
+          end
+          Thread.pass if rand(5) == 0
+        end
+      end
+    end
+
+    sleep 0.1 until q.size != 300
+
+    pop_readers = 10.times.collect do
+      Thread.new do
+        while q.pop do
+          m.synchronize do
+            val -= 1
+          end
+        end
+      end
+    end
+
+    writers.each { |w| w.join }
+    pop_readers.each { |p| p.join }
+
+    q.size.should eq(val)
+  end
 end
