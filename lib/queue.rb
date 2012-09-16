@@ -11,6 +11,7 @@ class Queue
   end
 
   def pop
+    return nil if @q.empty? || @q[0].finish_time >= Time.now
     @q.delete_at(0)
   end
 end

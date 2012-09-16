@@ -42,5 +42,22 @@ describe Queue do
       q.pop.should eq(t4)
       q.size.should eq(3)
     end
+
+    it "should return nil if queue is empty" do
+      q = Queue.new
+      q.size.should eq(0)
+      q.pop.should be_nil
+      q.size.should eq(0)
+    end
+
+    it "should return nil if queue doesn't have delayed task" do
+      q = Queue.new
+      t1 = Task.new(:finish_time => Time.now + 3000, :description => "Third")
+      t2 = Task.new(:finish_time => Time.now + 2592000, :description => "Fourth")
+      q.push(t1).push(t2)
+      q.size.should eq(2)
+      q.pop.should be_nil
+      q.size.should eq(2)
+    end
   end
 end
