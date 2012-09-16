@@ -10,6 +10,10 @@ class Queue
     self
   end
 
+  def get_task(time)
+    @q.delete_at(@q.index { |item| item.finish_time == time })
+  end
+
   def pop
     return nil if @q.empty? || @q[0].finish_time >= Time.now
     @q.delete_at(0)
