@@ -92,5 +92,12 @@ describe Queue do
       q.get_task(time_now + 1592000).should eq(t3)
       q.size.should eq(2)
     end
+
+    it "should return nil if queue is empty" do
+      q = Queue.new
+      q.size.should eq(0)
+      q.get_task(Time.now).should be_nil
+      q.size.should eq(0)
+    end
   end
 end

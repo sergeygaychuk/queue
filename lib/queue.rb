@@ -11,6 +11,7 @@ class Queue
   end
 
   def get_task(time)
+    return nil if @q.empty?
     @q.delete_at(@q.index { |item| item.finish_time == time })
   end
 
