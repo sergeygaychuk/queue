@@ -8,13 +8,15 @@ class RedisOrderedSet
   end
 
   def synchronize(&block)
-    #@redis.multi do
-    #  block.call(self)
-    #end
+    @redis.watch(@name) do
+      block.call(self)
+    end
   end
 
   def add(value)
-    @redis.zadd @name, @score_getter.call(value), @converter.serialize(value)
+    @redis.multi do
+      @redis.zadd @name, @score_getter.call(value).to_i, @converter.serialize(value)
+    end
   end
 
   def empty?
@@ -33,7 +35,9 @@ class RedisOrderedSet
   def delete_at(idx)
     values = @redis.zrange @name, idx, idx
     if values && values[0]
-      @redis.zrem @name, values[0]
+      @redis.multi do
+        @redis.zrem @name, values[0]
+      end
       @converter.deserialize(values[0])
     else
       nil
@@ -41,12 +45,14 @@ class RedisOrderedSet
   end
 
   def delete(item)
-    @redis.zrem @name, item
+    @redis.multi do
+      @redis.zrem @name, @converter.serialize(item)
+    end
     item
   end
 
   def find_by_score(score)
-    value = @redis.zrangebyscore @name, score, score
+    value = @redis.zrangebyscore @name, score.to_i, score.to_i
     if value && value[0]
       @converter.deserialize(value[0])
     else

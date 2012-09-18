@@ -6,4 +6,9 @@ class Task
     @finish_time = attrs[:finish_time]
     @description = attrs[:description]
   end
+
+  def ==(other)
+    return false unless other.instance_of?(Task)
+    (self.finish_time.to_i == other.finish_time.to_i) && (self.description == other.description)
+  end
 end
