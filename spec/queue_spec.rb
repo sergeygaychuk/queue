@@ -1,13 +1,13 @@
 require "rspec"
-require "queue"
+require "lib_queue"
 
 Queue.class_eval do
   def size
-    @q.size
+    @native.size
   end
 
   def native
-    @q
+    @native
   end
 end
 

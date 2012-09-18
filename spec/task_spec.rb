@@ -1,5 +1,5 @@
 require "rspec"
-require "task"
+require "lib_queue"
 
 describe Task do
   it "should return data after initialize" do
