@@ -7,7 +7,7 @@ RedisOrderedSet.class_exec do
     result = @redis.zrange @name, 0, count
     if result
       result.collect do |item|
-        @converter.from_s(item)
+        @converter.deserialize(item)
       end
     else
       []
@@ -29,11 +29,11 @@ RedisOrderedSet.class_exec do
 end
 
 class IntConverter
-  def self.to_s(value)
+  def self.serialize(value)
     value.to_s
   end
 
-  def self.from_s(value)
+  def self.deserialize(value)
     value.to_i
   end
 end

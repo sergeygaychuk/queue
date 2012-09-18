@@ -14,7 +14,7 @@ class RedisOrderedSet
   end
 
   def add(value)
-    @redis.zadd @name, @score_getter.call(value), @converter.to_s(value)
+    @redis.zadd @name, @score_getter.call(value), @converter.serialize(value)
   end
 
   def empty?
@@ -24,7 +24,7 @@ class RedisOrderedSet
   def[](idx)
     result = @redis.zrange(@name, idx, idx)
     if result && result[0]
-      @converter.from_s(result[0])
+      @converter.deserialize(result[0])
     else
       nil
     end
@@ -34,7 +34,7 @@ class RedisOrderedSet
     values = @redis.zrange @name, idx, idx
     if values && values[0]
       @redis.zrem @name, values[0]
-      @converter.from_s(values[0])
+      @converter.deserialize(values[0])
     else
       nil
     end
@@ -48,7 +48,7 @@ class RedisOrderedSet
   def find_by_score(score)
     value = @redis.zrangebyscore @name, score, score
     if value && value[0]
-      @converter.from_s(value[0])
+      @converter.deserialize(value[0])
     else
       nil
     end
