@@ -7,7 +7,9 @@ Queue.class_eval do
   end
 
   def native
-    @native
+    @native.instance_eval do
+      @array
+    end
   end
 end
 

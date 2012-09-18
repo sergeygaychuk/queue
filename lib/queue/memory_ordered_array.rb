@@ -31,9 +31,17 @@ class MemoryOrderedArray
     @array.delete_at(idx)
   end
 
-  #return index of array
+  def delete(item)
+    @array.delete(item)
+  end
+
   def find_by_score(score)
-    @array.index { |item| @score_getter.call(item) == score }
+    idx = @array.index { |item| @score_getter.call(item) == score }
+    if idx && idx >= 0
+      @array[idx]
+    else
+      nil
+    end
   end
 
   def size

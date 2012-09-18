@@ -16,9 +16,9 @@ class Queue
       return nil if queue.empty?
       item = unsafe_pop(queue)
       unless item
-        idx = queue.find_by_score(time)
-        return nil unless idx
-        item = queue.delete_at(idx)
+        item = queue.find_by_score(time)
+        return nil unless item
+        queue.delete(item)
       end
       item
     end

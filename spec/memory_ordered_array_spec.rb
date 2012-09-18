@@ -68,10 +68,42 @@ describe MemoryOrderedArray do
       a.delete_at(0)
       a[0].should eq(2)
     end
+
+    it "should return removed item" do
+      a = MemoryOrderedArray.new
+      a.add(2)
+      a.add(1)
+      a.add(3)
+      a[0].should eq(1)
+      a.delete_at(0).should eq(1)
+      a[0].should eq(2)
+    end
+  end
+
+  describe "#delete" do
+    it "should remove by item" do
+      a = MemoryOrderedArray.new
+      a.add(2)
+      a.add(1)
+      a.add(3)
+      a.native.should eq([1, 2, 3])
+      a.delete(2)
+      a.native.should eq([1, 3])
+    end
+
+    it "should return removed item" do
+      a = MemoryOrderedArray.new
+      a.add(2)
+      a.add(1)
+      a.add(3)
+      a.native.should eq([1, 2, 3])
+      a.delete(2).should eq(2)
+      a.native.should eq([1, 3])
+    end
   end
 
   describe "#find_by_score" do
-    it "should search by score" do
+    it "should return idx by score" do
       a = MemoryOrderedArray.new do |i|
         case i
           when 1
@@ -85,17 +117,17 @@ describe MemoryOrderedArray do
       a.add(2)
       a.add(1)
       a.add(3)
-      a.find_by_score(2).should eq(2)
-      a.find_by_score(0).should eq(0)
+      a.find_by_score(2).should eq(1)
+      a.find_by_score(0).should eq(3)
     end
 
-    it "should search by score with default getter" do
+    it "should return idx by score with default getter" do
       a = MemoryOrderedArray.new
       a.add(2)
       a.add(1)
       a.add(3)
-      a.find_by_score(2).should eq(1)
-      a.find_by_score(3).should eq(2)
+      a.find_by_score(2).should eq(2)
+      a.find_by_score(3).should eq(3)
     end
   end
 
